@@ -3,55 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>КАТЭК AR Экспонат</title>
+    <title>РўРµСЃС‚ 3D РјРѕРґРµР»Рё РљРђРўР­Рљ</title>
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
-    
+    <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v7.2.0/dist/aframe-extras.min.js"></script>
     <style>
-        body { margin: 0; overflow: hidden; }
-        /* Простейший индикатор загрузки, пока камера инициализируется */
-        #scanning-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5); color: white; display: flex;
-            align-items: center; justify-content: center; font-family: sans-serif;
-            z-index: 9999; pointer-events: none;
-        }
-        .hidden { display: none !important; }
+        body { margin: 0; overflow: hidden; background-color: #1a1a1a; }
     </style>
 </head>
 <body>
 
-    <div id="scanning-overlay">Запуск камеры и загрузка AR-сцены...</div>
-
-    <a-scene mindar-image="imageTargetSrc: ./targets.mind; filterMinCF:0.001; filterBeta: 0.01;" 
-             color-space="sRGB" 
-             renderer="colorManagement: true, physicallyCorrectLights: true" 
-             vr-mode-ui="enabled: false" 
-             device-orientation-permission-ui="enabled: false">
+    <a-scene color-space="sRGB" renderer="colorManagement: true; physicallyCorrectLights: true;">
         
         <a-assets>
             <a-asset-item id="katekModel" src="./model.glb"></a-asset-item>
         </a-assets>
 
-        <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+        <a-entity camera look-controls orbit-controls="target: 0 0 0; minDistance: 1; maxDistance: 20; initialPosition: 0 2 5"></a-entity>
 
-        <a-entity mindar-image-target="targetIndex: 0">
-            <a-gltf-model src="#katekModel" 
-                          position="0 0 0" 
-                          rotation="90 0 0" 
-                          scale="0.5 0.5 0.5">
-            </a-gltf-model>
+        <a-entity light="type: ambient; color: #ffffff; intensity: 0.6"></a-entity>
+        <a-entity light="type: directional; color: #ffffff; intensity: 0.8" position="1 4 3"></a-entity>
+        <a-entity light="type: directional; color: #ffffff; intensity: 0.5" position="-2 2 -3"></a-entity>
+
+        <a-entity id="modelContainer" position="0 0 0">
+            <a-gltf-model src="#katekModel" scale="1 1 1"></a-gltf-model>
         </a-entity>
-        
+
     </a-scene>
 
-    <script>
-        // Скрываем оверлей загрузки, когда AR готова к работе
-        const sceneEl = document.querySelector('a-scene');
-        const overlay = document.getElementById('scanning-overlay');
-        sceneEl.addEventListener("arReady", () => {
-            overlay.classList.add('hidden');
-        });
-    </script>
 </body>
 </html>
