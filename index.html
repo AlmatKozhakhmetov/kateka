@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Презентация ГРПШ в AR</title>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
+    <style>
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; font-family: 'Segoe UI', Roboto, sans-serif; }
+        model-viewer { width: 100%; height: 100%; background: linear-gradient(#ececec, #ffe2e200); }
+        .ar-button {
+            position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+            padding: 16px 32px; background: #28a745; color: white;
+            border: none; border-radius: 50px; font-size: 18px; font-weight: bold;
+            box-shadow: 0 8px 24px rgba(40, 167, 69, 0.4); cursor: pointer; z-index: 999;
+            transition: all 0.3s ease;
+        }
+        .ar-button:active { background: #218838; transform: translateX(-50%) scale(0.95); }
+        .hint {
+            position: absolute; top: 20px; width: 100%; text-align: center;
+            color: #333; font-size: 14px; background: rgba(255,255,255,0.8);
+            padding: 8px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 998;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hint">Удерживайте палец для вращения модели ГРПШ</div>
+
+    <model-viewer src="model.glb"
+                  ar
+                  ar-modes="scene-viewer quick-look webxr"
+                  camera-controls
+                  auto-rotate
+                  ar-scale="auto"
+                  shadow-intensity="1.5"
+                  alt="3D модель ГРПШ для презентации">
+        
+        <button slot="ar-button" class="ar-button">?? ЗАПУСТИТЬ AR НА ОБЪЕКТЕ</button>
+        
+    </model-viewer>
+
+</body>
+</html>
