@@ -3,42 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Презентация ГРПШ в AR</title>
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
+    <title>КАТЭК AR Экспонат</title>
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+    
     <style>
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; font-family: 'Segoe UI', Roboto, sans-serif; }
-        model-viewer { width: 100%; height: 100%; background: linear-gradient(#ececec, #ffe2e200); }
-        .ar-button {
-            position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
-            padding: 16px 32px; background: #28a745; color: white;
-            border: none; border-radius: 50px; font-size: 18px; font-weight: bold;
-            box-shadow: 0 8px 24px rgba(40, 167, 69, 0.4); cursor: pointer; z-index: 999;
-            transition: all 0.3s ease;
+        body { margin: 0; overflow: hidden; }
+        /* Простейший индикатор загрузки, пока камера инициализируется */
+        #scanning-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); color: white; display: flex;
+            align-items: center; justify-content: center; font-family: sans-serif;
+            z-index: 9999; pointer-events: none;
         }
-        .ar-button:active { background: #218838; transform: translateX(-50%) scale(0.95); }
-        .hint {
-            position: absolute; top: 20px; width: 100%; text-align: center;
-            color: #333; font-size: 14px; background: rgba(255,255,255,0.8);
-            padding: 8px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 998;
-        }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-    <div class="hint">Удерживайте палец для вращения модели ГРПШ</div>
+    <div id="scanning-overlay">Запуск камеры и загрузка AR-сцены...</div>
 
-    <model-viewer src="model.glb"
-                  ar
-                  ar-modes="scene-viewer quick-look webxr"
-                  camera-controls
-                  auto-rotate
-                  ar-scale="auto"
-                  shadow-intensity="1.5"
-                  alt="3D модель ГРПШ для презентации">
+    <a-scene mindar-image="imageTargetSrc: ./targets.mind; filterMinCF:0.001; filterBeta: 0.01;" 
+             color-space="sRGB" 
+             renderer="colorManagement: true, physicallyCorrectLights: true" 
+             vr-mode-ui="enabled: false" 
+             device-orientation-permission-ui="enabled: false">
         
-        <button slot="ar-button" class="ar-button">?? ЗАПУСТИТЬ AR НА ОБЪЕКТЕ</button>
-        
-    </model-viewer>
+        <a-assets>
+            <a-asset-item id="katekModel" src="./model.glb"></a-asset-item>
+        </a-assets>
 
+        <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+        <a-entity mindar-image-target="targetIndex: 0">
+            <a-gltf-model src="#katekModel" 
+                          position="0 0 0" 
+                          rotation="90 0 0" 
+                          scale="0.5 0.5 0.5">
+            </a-gltf-model>
+        </a-entity>
+        
+    </a-scene>
+
+    <script>
+        // Скрываем оверлей загрузки, когда AR готова к работе
+        const sceneEl = document.querySelector('a-scene');
+        const overlay = document.getElementById('scanning-overlay');
+        sceneEl.addEventListener("arReady", () => {
+            overlay.classList.add('hidden');
+        });
+    </script>
 </body>
 </html>
